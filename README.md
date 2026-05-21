@@ -10,7 +10,7 @@ API de um projeto pessoal de finanças pessoais, para uso próprio. Desenvolvido
 ## Tecnologias:
 - Java
 - Spring Boot
-- SQL
+- PostgreSQL
 - Spring Data JPA
 - Lombok
 - DevTools
