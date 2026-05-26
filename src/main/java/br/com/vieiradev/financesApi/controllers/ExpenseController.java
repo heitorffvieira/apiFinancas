@@ -2,6 +2,7 @@ package br.com.vieiradev.financesApi.controllers;
 
 import br.com.vieiradev.financesApi.dtos.ExpenseRequestDTO;
 import br.com.vieiradev.financesApi.dtos.ExpenseResponseDTO;
+import br.com.vieiradev.financesApi.dtos.ExpenseSummaryDTO;
 import br.com.vieiradev.financesApi.services.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,11 @@ public class ExpenseController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         expenseService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/month/summary")
+    public ResponseEntity<ExpenseSummaryDTO> getMonthSummary(@RequestParam Integer month, @RequestParam Integer year) {
+        return ResponseEntity.ok(expenseService.getMonthSummary(month, year));
     }
 
 }

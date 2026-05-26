@@ -2,15 +2,21 @@ package br.com.vieiradev.financesApi.services;
 
 import br.com.vieiradev.financesApi.dtos.ExpenseRequestDTO;
 import br.com.vieiradev.financesApi.dtos.ExpenseResponseDTO;
+import br.com.vieiradev.financesApi.dtos.ExpenseSummaryDTO;
 import br.com.vieiradev.financesApi.entities.Expense;
+import br.com.vieiradev.financesApi.enums.Category;
+import br.com.vieiradev.financesApi.enums.PaymentMethod;
 import br.com.vieiradev.financesApi.exceptions.BusinessException;
 import br.com.vieiradev.financesApi.exceptions.ResourceNotFoundException;
 import br.com.vieiradev.financesApi.repositories.ClosedMonthRepository;
 import br.com.vieiradev.financesApi.repositories.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExpenseService {
@@ -118,4 +124,40 @@ public class ExpenseService {
         Expense expense = findExpenseOrThrow(id);
         return toResponse(expense);
     }
+
+    public ExpenseSummaryDTO getMonthSummary(Integer month, Integer year) {
+
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+        List<Expense> expenses = expenseRepository.findByDateBetween(start, end);
+
+        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal totalCredit = BigDecimal.ZERO;
+        BigDecimal totalImmediate = BigDecimal.ZERO;
+
+        Map<Category, BigDecimal> categories = new HashMap<>();
+
+        for(Expense expense : expenses) {
+
+            BigDecimal value = expense.getValue();
+            total = total.add(value);
+
+            if(expense.getPaymentMethod() == PaymentMethod.CREDITO) {
+                totalCredit = totalCredit.add(value);
+            } else {
+                totalImmediate = totalImmediate.add(value);
+            }
+
+            categories.put(expense.getCategory(),
+
+                    categories.getOrDefault(
+                            expense.getCategory(),
+                            BigDecimal.ZERO
+                    ).add(value)
+            );
+        }
+
+        return new ExpenseSummaryDTO(total, totalCredit, totalImmediate, categories);
+    }
+
 }
