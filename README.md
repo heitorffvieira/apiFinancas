@@ -2,9 +2,11 @@
 API de um projeto pessoal de finanças pessoais, para uso próprio. Desenvolvido em prol de uma necessidade pessoal minha de ter um controle e noção dos meus gastos mensais. 
 
 ## Funcionalidades:
-- Cadastro de despesas (nome, categoria(já pré-definida pelo enum), valor, data);
+- Cadastro de despesas (nome, categoria(já pré-definida pelo enum), valor, método de pagamento(já pré-definido pelo enum), data);
 - Editar e excluir despesa;
 - Fechar mês (ter a opção de fechar o mês e, assim que fechado, não é mais possível adicionar uma despesa com a data que condiz com esse mês);
+- Reabrir mês (caso o usuário queira mudar algo em um mês que já foi fechado, ele consegue, entretanto, apenas o último mês que foi fechado);
+- Relatórios de despesa;
 - Acessar o histórico de cada mês;
 
 ## Tecnologias:
