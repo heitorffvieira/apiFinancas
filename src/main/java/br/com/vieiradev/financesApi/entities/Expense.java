@@ -1,6 +1,7 @@
 package br.com.vieiradev.financesApi.entities;
 
 import br.com.vieiradev.financesApi.enums.Category;
+import br.com.vieiradev.financesApi.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,10 @@ public class Expense {
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal value;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentMethod paymentMethod;
 
     @Column(name = "expense_date", nullable = false)
     private LocalDate date;

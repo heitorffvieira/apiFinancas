@@ -32,6 +32,7 @@ public class ExpenseService {
                 expense.getId(),
                 expense.getName(),
                 expense.getCategory(),
+                expense.getPaymentMethod(),
                 expense.getValue(),
                 expense.getDate()
         );
@@ -44,6 +45,7 @@ public class ExpenseService {
         expense.setName(dto.name());
         expense.setCategory(dto.category());
         expense.setValue(dto.value());
+        expense.setPaymentMethod(dto.paymentMethod());
         expense.setDate(dto.date());
 
         return expense;
@@ -98,6 +100,7 @@ public class ExpenseService {
 
         expense.setName(dto.name());
         expense.setCategory(dto.category());
+        expense.setPaymentMethod(dto.paymentMethod());
         expense.setValue(dto.value());
         expense.setDate(dto.date());
 
