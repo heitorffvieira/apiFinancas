@@ -50,4 +50,10 @@ public class ClosedMonthController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{id}/reopen")
+    public ResponseEntity<Void> reopen(@PathVariable Long id) {
+        closedMonthService.reopen(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

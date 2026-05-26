@@ -24,11 +24,7 @@ public class ClosedMonthService {
 
     public ClosedMonth create(ClosedMonthRequest dto) {
 
-        boolean alreadyClosed =
-                closedMonthRepository.existsByMonthAndYear(
-                        dto.month(),
-                        dto.year()
-                );
+        boolean alreadyClosed = closedMonthRepository.existsByMonthAndYear(dto.month(), dto.year());
 
         if(alreadyClosed) {
             throw new BusinessException("Mês já encerrado.");
@@ -40,20 +36,11 @@ public class ClosedMonthService {
                 1
         );
 
-        LocalDate end = start.withDayOfMonth(
-                start.lengthOfMonth()
-        );
-
-        boolean hasExpenses =
-                expenseRepository.existsByDateBetween(
-                        start,
-                        end
-                );
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+        boolean hasExpenses = expenseRepository.existsByDateBetween(start, end);
 
         if(!hasExpenses) {
-            throw new BusinessException(
-                    "Não existem despesas neste mês."
-            );
+            throw new BusinessException("Não existem despesas neste mês.");
         }
 
         ClosedMonth closedMonth = new ClosedMonth();
@@ -81,6 +68,23 @@ public class ClosedMonthService {
 
     public ClosedMonth getById(Long id) {
         return findMonthOrThrow(id);
+    }
+
+    public void reopen(Long id) {
+        ClosedMonth closedMonth = findMonthOrThrow(id);
+
+        ClosedMonth lastClosed = closedMonthRepository
+                .findTopByOrderByYearDescMonthDesc()
+                .orElseThrow(() ->
+                        new BusinessException("Não existem meses fechados."));
+
+        boolean isLastMonth = closedMonth.getId().equals(lastClosed.getId());
+
+        if(!isLastMonth) {
+            throw new BusinessException("Apenas o último mês fechado pode ser reaberto.");
+        }
+
+        closedMonthRepository.delete(closedMonth);
     }
 
 }
